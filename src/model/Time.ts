@@ -1,4 +1,4 @@
-import { isNullOrUndefined, parseInteger} from '@utils';
+import { NumberUtils, TypeCheckingUtils, DateUtils } from '@utils';
 
 type ComparisonFunction = (aNumber: number) => boolean;
 
@@ -10,7 +10,7 @@ export class Time {
   private date: Date;
   
   constructor(date?: string | Date) {
-    if (isNullOrUndefined(date)) {
+    if (TypeCheckingUtils.isNullOrUndefined(date)) {
       this.date = new Date();
     } else {
       this.date = new Date(date);
@@ -18,20 +18,13 @@ export class Time {
   }
 
   public toDate(): Date {
-    return Time.parseDate(this);
+    return DateUtils.fromTime(this);
   }
 
   public toString(): String {
     const minutes = addPrecedingZero(this.minute, (a) => a < 10);
     const hours = addPrecedingZero(this.hour, (a) => a < 10);
     return `${hours}:${minutes}`;
-  }
-
-  public static parseDate(time: Time): Date {
-    const result = new Date;
-    result.setHours(parseInt(time.hour.toString()))
-    result.setMinutes(parseInt(time.minute.toString()))
-    return result;
   }
 
   set minute(minute: number) {

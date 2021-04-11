@@ -5,3 +5,4 @@ export class InvalidHourError extends Error {
     super(message || InvalidHourError.DEFAULT_MESSAGE);
   }
 }
+

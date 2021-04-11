@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { View, Button } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+
+import {TimePicker} from '@components';
 
 import { Time, Period, PeriodTimeType } from '@model';
 
 type PeriodInputProps = { value: Period; onChange: (time: Period) => void };
+
 export function PeriodInput({ value, onChange }: PeriodInputProps) {
   const [isStartPickerEnabled, setIsStartPickerEnabled] = useState<boolean>(false);
   const [isFinishPickerEnabled, setIsFinishPickerEnabled] = useState<boolean>(false);
-  const [showPicker, setShowPicker] = useState<boolean>(
-    isStartPickerEnabled || isFinishPickerEnabled,
-  );
-  const [pickerDate, setPickerDate] = useState<{ value: Date; action: Function }>();
+  const [isVisibleTimePicker, setShowPicker] = useState<boolean>(false);
+  const [pickerTime, setPickerTime] = useState<{ value: Time; action: Function }>();
 
   const updatePickerVisibility = () => setShowPicker(isStartPickerEnabled || isFinishPickerEnabled);
 
   useEffect(() => {
     if (isStartPickerEnabled) {
       setIsFinishPickerEnabled(false);
-      setPickerDate({
+      setPickerTime({
         value: value.getStartDate(),
         action: handlePickStartDate,
       });
@@ -30,7 +30,7 @@ export function PeriodInput({ value, onChange }: PeriodInputProps) {
   useEffect(() => {
     if (isFinishPickerEnabled) {
       setIsStartPickerEnabled(false);
-      setPickerDate({
+      setPickerTime({
         value: value.getFinishDate(),
         action: handlePickFinishDate,
       });
@@ -51,17 +51,17 @@ export function PeriodInput({ value, onChange }: PeriodInputProps) {
     onChange(newPeriod);
   };
 
-  const handlePickStartDate = (aDate: Date) => {
-    handlePickTime(new Time(aDate), PeriodTimeType.START);
+  const handlePickStartDate = (aTime: Time) => {
+    handlePickTime(aTime, PeriodTimeType.START);
   };
 
-  const handlePickFinishDate = (aDate: Date) => {
-    handlePickTime(new Time(aDate), PeriodTimeType.FINISH);
+  const handlePickFinishDate = (aTime: Time) => {
+    handlePickTime(aTime, PeriodTimeType.FINISH);
   };
 
   const handleOpenPickStartTime = () => setIsStartPickerEnabled(true);
-
   const handleOpenPickFinishTime = () => setIsFinishPickerEnabled(true);
+
 // TODO criar um HOC do DateTimePicker para poder usar Time como value
   return (
     <View>
@@ -69,13 +69,12 @@ export function PeriodInput({ value, onChange }: PeriodInputProps) {
 
       <Button title={`Finished at ${value.finish.toString()}`} onPress={handleOpenPickFinishTime} />
 
-      {showPicker && (
-        <DateTimePicker
-          value={pickerDate.value}
-          onChange={(_, aDate) => pickerDate.action(aDate)}
-          mode="time"
-        />
-      )}
+      <TimePicker 
+        visible={isVisibleTimePicker}
+        value={pickerTime.value} 
+        onChange={pickerTime.action}
+      />
+
     </View>
   );
 }
