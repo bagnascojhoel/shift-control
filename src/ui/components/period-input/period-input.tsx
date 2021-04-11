@@ -1,66 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { View, Button } from 'react-native';
 
-import {TimePicker} from '@components';
+import { Time, Period } from '@model';
 
-import { Time, Period, PeriodTimeType } from '@model';
+import { TimePicker } from '../time-picker/time-picker';
 
 type PeriodInputProps = { value: Period; onChange: (time: Period) => void };
 
 export function PeriodInput({ value, onChange }: PeriodInputProps) {
-  const [isStartPickerEnabled, setIsStartPickerEnabled] = useState<boolean>(false);
-  const [isFinishPickerEnabled, setIsFinishPickerEnabled] = useState<boolean>(false);
-  const [isVisibleTimePicker, setShowPicker] = useState<boolean>(false);
-  const [pickerTime, setPickerTime] = useState<{ value: Time; action: Function }>();
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [action, setAction] = useState<Function>(null);
+  const [time, setTime] = useState<Time>(new Time);
 
-  const updatePickerVisibility = () => setShowPicker(isStartPickerEnabled || isFinishPickerEnabled);
+  const pickStartTime = (aTime: Time) => onChange(new Period(aTime, value.finish));
 
+  const pickFinishTime = (aTime: Time) => onChange(new Period(value.start, aTime));
+
+  const handleOpenPickStartTime = () => {
+    const test = (t) => pickStartTime(t);
+    setAction(() => test);
+    setTime(value.start);
+  }
+
+  const handleOpenPickFinishTime = () => {
+    const test = (t) => pickFinishTime(t);
+    setAction(() => test);
+    setTime(value.finish);
+  }
+  
+  const handleOnClosePicker = () => setIsVisible(false);
+  
   useEffect(() => {
-    if (isStartPickerEnabled) {
-      setIsFinishPickerEnabled(false);
-      setPickerTime({
-        value: value.getStartDate(),
-        action: handlePickStartDate,
-      });
-    }
-
-    updatePickerVisibility();
-  }, [isStartPickerEnabled]);
-
-  useEffect(() => {
-    if (isFinishPickerEnabled) {
-      setIsStartPickerEnabled(false);
-      setPickerTime({
-        value: value.getFinishDate(),
-        action: handlePickFinishDate,
-      });
-    }
-
-    updatePickerVisibility();
-  }, [isFinishPickerEnabled]);
-
-  const handlePickTime = (newTime: Time, timeType) => {
-    const { start, finish } = value;
-
-    let newPeriod;
-    if (timeType === PeriodTimeType.START) 
-      newPeriod = new Period(newTime, finish);
-    else if (timeType === PeriodTimeType.FINISH)
-      newPeriod = new Period(start, newTime);
-
-    onChange(newPeriod);
-  };
-
-  const handlePickStartDate = (aTime: Time) => {
-    handlePickTime(aTime, PeriodTimeType.START);
-  };
-
-  const handlePickFinishDate = (aTime: Time) => {
-    handlePickTime(aTime, PeriodTimeType.FINISH);
-  };
-
-  const handleOpenPickStartTime = () => setIsStartPickerEnabled(true);
-  const handleOpenPickFinishTime = () => setIsFinishPickerEnabled(true);
+    if (time && !!action)
+      setIsVisible(true);
+  })
 
 // TODO criar um HOC do DateTimePicker para poder usar Time como value
   return (
@@ -70,11 +43,11 @@ export function PeriodInput({ value, onChange }: PeriodInputProps) {
       <Button title={`Finished at ${value.finish.toString()}`} onPress={handleOpenPickFinishTime} />
 
       <TimePicker 
-        visible={isVisibleTimePicker}
-        value={pickerTime.value} 
-        onChange={pickerTime.action}
+        visible={isVisible}
+        value={time}
+        onChange={action}
+        onClose={handleOnClosePicker}
       />
-
     </View>
   );
 }

@@ -16,7 +16,8 @@ export default function Main() {
     newPeriodList[i] = aPeriod;
     setPeriodList(newPeriodList);
   };
-  // TODO discober why it's only changing one of the times value
+
+  console.log(periodList);
   
   return (
     <>
@@ -26,11 +27,14 @@ export default function Main() {
         <Text style={Common.pageTitle}>Shift Control</Text>
 
         {periodList.map((period, i) => (
-          <PeriodInput
-            onChange={(newPeriod: Period) => handleUpdatePeriod(newPeriod, i)}
-            value={period}
-            key={i}
-          />
+          <>
+            <PeriodInput
+              onChange={(newPeriod: Period) => handleUpdatePeriod(newPeriod, i)}
+              value={period}
+              key={i}
+            />
+            <Text>SPACE</Text>
+          </>
         ))}
       </View>
     </>

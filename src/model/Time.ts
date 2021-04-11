@@ -1,4 +1,4 @@
-import { NumberUtils, TypeCheckingUtils, DateUtils } from '@utils';
+import { TypeCheckingUtils } from '@utils';
 
 type ComparisonFunction = (aNumber: number) => boolean;
 
@@ -18,13 +18,20 @@ export class Time {
   }
 
   public toDate(): Date {
-    return DateUtils.fromTime(this);
+    return Time.toDate(this);
   }
 
   public toString(): String {
     const minutes = addPrecedingZero(this.minute, (a) => a < 10);
     const hours = addPrecedingZero(this.hour, (a) => a < 10);
     return `${hours}:${minutes}`;
+  }
+
+  public static toDate(time: Time): Date {
+    const result = new Date;
+    result.setHours(parseInt(time.hour.toString()))
+    result.setMinutes(parseInt(time.minute.toString()))
+    return result;
   }
 
   set minute(minute: number) {
