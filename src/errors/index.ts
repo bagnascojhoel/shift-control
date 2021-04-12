@@ -1,3 +1,2 @@
-export * from './InvalidHourError';
-export * from './InvalidMinuteError';
+export * from './InvalidTimeStringError';
 export * from './InvalidRequiredPropError';

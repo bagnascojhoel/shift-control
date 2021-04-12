@@ -6,9 +6,10 @@ import { PeriodInput } from '@components';
 
 export default function Main() {
   const [periods, setPeriods] = useState<Period[]>([new Period()]);
-
+  
   const handleAddPeriod = () => {
     setPeriods([...periods, new Period()]);
+    
   };
 
   const handleUpdatePeriod = (aPeriod: Period, i: number) => {

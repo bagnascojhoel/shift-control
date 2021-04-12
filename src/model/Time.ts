@@ -9,11 +9,17 @@ function addPrecedingZero(aNumber: number, comparison: ComparisonFunction): stri
 export class Time {
   private date: Date;
   
-  constructor(date?: string | Date) {
-    if (TypeCheckingUtils.isNullOrUndefined(date)) {
+  constructor(value?: string | Date) {
+    if (TypeCheckingUtils.isNullOrUndefined(value)) {
       this.date = new Date();
+    } else if (value instanceof Date) {
+      this.date = new Date(value);
     } else {
-      this.date = new Date(date);
+      TypeCheckingUtils.validateTimeString(value);
+      const [hours, minutes] = value.split(':').map((v) => parseInt(v, 10));
+      this.date = new Date();
+      this.date.setHours(hours);
+      this.date.setMinutes(minutes);
     }
   }
 
@@ -27,7 +33,17 @@ export class Time {
     return `${hours}:${minutes}`;
   }
 
-  // TODO adicionar funções de soma e subtração
+  public add(aTime: Time): Time {
+    const result = new Time();
+    const minutes = this.minute + aTime.minute;
+    result.hour = this.hour + aTime.hour;
+    result.hour = minutes > 59 ? result.hour + Math.floor(minutes/60) : result.hour;
+    result.minute = minutes % 60;
+    
+    return result;
+  }
+
+  // TODO adicionar funções de subtração
 
   public static toDate(time: Time): Date {
     const result = new Date;
@@ -36,25 +52,19 @@ export class Time {
     return result;
   }
 
-  set minute(minute: number) {
-    if (this.date !== null)
-      this.date = new Date();
-  
+  set minute(minute: number) {  
     this.date.setMinutes(minute);
   }
 
   set hour(hour: number) {
-    if (this.date !== null)
-      this.date = new Date();
-
     this.date.setHours(hour);
   }
 
-  get minute() {
+  get minute(): number {
     return this.date.getMinutes();
   }
 
-  get hour() {
+  get hour(): number {
     return this.date.getHours();
   }
 }
