@@ -25,4 +25,6 @@ export class Period {
   get finish() {
     return this.finishTime;
   }
+
+  // TODO adicionar getter para duração do período
 }

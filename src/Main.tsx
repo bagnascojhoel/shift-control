@@ -5,20 +5,18 @@ import { Period, Time } from '@model';
 import { PeriodInput } from '@components';
 
 export default function Main() {
-  const [periodList, setPeriodList] = useState<Period[]>([new Period()]);
+  const [periods, setPeriods] = useState<Period[]>([new Period()]);
 
   const handleAddPeriod = () => {
-    setPeriodList([...periodList, new Period()]);
+    setPeriods([...periods, new Period()]);
   };
 
   const handleUpdatePeriod = (aPeriod: Period, i: number) => {
-    const newPeriodList: Period[] = [...periodList];
+    const newPeriodList: Period[] = [...periods];
     newPeriodList[i] = aPeriod;
-    setPeriodList(newPeriodList);
+    setPeriods(newPeriodList);
   };
-
-  console.log(periodList);
-  
+  // TODO adicionar total de tempo nos períodos
   return (
     <>
       <StatusBar />
@@ -26,15 +24,14 @@ export default function Main() {
         <Button title="Adicionar período" onPress={handleAddPeriod} />
         <Text style={Common.pageTitle}>Shift Control</Text>
 
-        {periodList.map((period, i) => (
-          <>
+        {periods.map((period, i) => (
+          <View key={`${i}period`}>
             <PeriodInput
               onChange={(newPeriod: Period) => handleUpdatePeriod(newPeriod, i)}
               value={period}
-              key={i}
             />
-            <Text>SPACE</Text>
-          </>
+            <Text>SPACE {i}</Text>
+          </View>
         ))}
       </View>
     </>

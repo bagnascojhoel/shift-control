@@ -27,6 +27,8 @@ export class Time {
     return `${hours}:${minutes}`;
   }
 
+  // TODO adicionar funções de soma e subtração
+
   public static toDate(time: Time): Date {
     const result = new Date;
     result.setHours(parseInt(time.hour.toString()))
