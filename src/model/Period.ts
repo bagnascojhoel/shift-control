@@ -1,30 +1,24 @@
 import { Time } from './Time';
 
 export class Period {
-  private startTime: Time;
+  private _start: Time;
 
-  private finishTime: Time;
+  private _finish: Time;
 
   constructor(start?: Time, finish?: Time) {
-    this.startTime = start ?? new Time();
-    this.finishTime = finish ?? new Time();
+    this._start = start ?? new Time();
+    this._finish = finish ?? new Time();
   }
 
-  getStartDate(): Date {
-    return this.startTime.toDate();
+  get start(): Time {
+    return this._start;
   }
 
-  getFinishDate(): Date {
-    return this.finishTime.toDate();
+  get finish(): Time {
+    return this._finish;
   }
 
-  get start() {
-    return this.startTime;
+  get duration(): Time {
+    return this._finish.sub(this._start);
   }
-
-  get finish() {
-    return this.finishTime;
-  }
-
-  // TODO adicionar getter para duração do período
 }

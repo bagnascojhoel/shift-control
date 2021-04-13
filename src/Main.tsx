@@ -23,6 +23,14 @@ export default function Main() {
       <View style={MainStyles.container}>
         <Button title="Adicionar período" onPress={handleAddPeriod} />
         <Text style={Common.pageTitle}>Shift Control</Text>
+        <Text>Total: {
+        periods.reduce(
+          (total, period): Time => {
+            return total.add(period.duration)
+          },
+          Time.getEmpty()
+        ).toString()
+        }</Text>
 
         {periods.map((period, i) => (
           <View key={`${i}period`}>

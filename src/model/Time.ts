@@ -23,6 +23,10 @@ export class Time {
     }
   }
 
+  public static getEmpty(): Time {
+    return new Time('00:00');
+  }
+
   public static getLatest(time1: Time, time2: Time): Time {
     return time1.isLaterThan(time2) ? time1 : time2;
   }
