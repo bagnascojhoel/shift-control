@@ -16,7 +16,7 @@ export default function Main() {
     newPeriodList[i] = aPeriod;
     setPeriods(newPeriodList);
   };
-  // TODO adicionar total de tempo nos períodos
+  
   return (
     <>
       <StatusBar />
