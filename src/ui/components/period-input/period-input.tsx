@@ -79,6 +79,11 @@ export function PeriodInput({
     });
   }
 
+  // TODO desenvolver uma forma de lidar com início maior que o fim
+  // periodStart = 15:30
+  // periodFinish = 12:23
+  // Talvez considerar que seja o dia seguinte/
+
   return (
     <View>
       <Button title={`Started at ${value.start.toString()}`} onPress={handleOpenPickStartTime} />
