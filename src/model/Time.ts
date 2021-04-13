@@ -23,6 +23,21 @@ export class Time {
     }
   }
 
+  public static getLatest(time1: Time, time2: Time): Time {
+    return time1.isLaterThan(time2) ? time1 : time2;
+  }
+
+  public static getSoonest(time1: Time, time2: Time): Time {
+    return time1.isLaterThan(time2) ? time2 : time1;
+  }
+
+  public static toDate(time: Time): Date {
+    const result = new Date;
+    result.setHours(parseInt(time.hour.toString()))
+    result.setMinutes(parseInt(time.minute.toString()))
+    return result;
+  }
+
   public toDate(): Date {
     return Time.toDate(this);
   }
@@ -34,22 +49,36 @@ export class Time {
   }
 
   public add(aTime: Time): Time {
-    const result = new Time();
     const minutes = this.minute + aTime.minute;
+    
+    const result = new Time();
     result.hour = this.hour + aTime.hour;
     result.hour = minutes > 59 ? result.hour + Math.floor(minutes/60) : result.hour;
     result.minute = minutes % 60;
-    
     return result;
   }
 
-  // TODO adicionar funções de subtração
+  public sub(aTime: Time): Time {
+    if (this.isEqualTo(aTime))
+      return new Time('00:00');
 
-  public static toDate(time: Time): Date {
-    const result = new Date;
-    result.setHours(parseInt(time.hour.toString()))
-    result.setMinutes(parseInt(time.minute.toString()))
+    const latest = Time.getLatest(this, aTime);
+    const soonest = Time.getSoonest(this, aTime);
+    const minutes = latest.minute - soonest.minute;
+
+    const result = new Time();
+    result.hour = latest.hour - soonest.hour;
+    result.hour = minutes < 0 ? result.hour -1 : result.hour;
+    result.minute = Math.abs(minutes);
     return result;
+  }
+
+  public isLaterThan(aTime: Time): boolean {
+    return this.hour > aTime.hour || (this.hour === aTime.hour && this.minute > aTime.minute);
+  }
+
+  public isEqualTo(aTime: Time): boolean {
+    return this.hour === aTime.hour && this.minute === aTime.minute;
   }
 
   set minute(minute: number) {  

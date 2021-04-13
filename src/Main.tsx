@@ -8,8 +8,7 @@ export default function Main() {
   const [periods, setPeriods] = useState<Period[]>([new Period()]);
   
   const handleAddPeriod = () => {
-    setPeriods([...periods, new Period()]);
-    
+    setPeriods([...periods, new Period()]);  
   };
 
   const handleUpdatePeriod = (aPeriod: Period, i: number) => {
