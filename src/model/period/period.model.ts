@@ -1,4 +1,4 @@
-import { Time } from './Time';
+import { Time } from '../time/time.model';
 
 export class Period {
   private _start: Time;
@@ -20,5 +20,9 @@ export class Period {
 
   get duration(): Time {
     return this._finish.sub(this._start);
+  }
+
+  public toString(): string {
+    return `started at ${this._start.toString()} and finished at ${this._finish.toString()}`;
   }
 }

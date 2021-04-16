@@ -41,7 +41,8 @@ function periodReducer(state: PeriodState, action: PeriodStateAction) {
 // TODO melhorar a organização e relação deste componente com TimePicker
 export function PeriodInput({
    value,
-   onChange 
+   onChange,
+   ...otherProps
   }:{
     value: Period,
     onChange: (time: Period) => void 
@@ -84,8 +85,10 @@ export function PeriodInput({
   // periodFinish = 12:23
   // Talvez considerar que seja o dia seguinte/
 
+  // TODO corrigir soma das durações; atualmente 8:55 -> 12:06 + 13:03 -> 16:09 = 6:55
+  //                                              03:11           03:06
   return (
-    <View>
+    <View {...otherProps}>
       <Button title={`Started at ${value.start.toString()}`} onPress={handleOpenPickStartTime} />
 
       <Button title={`Finished at ${value.finish.toString()}`} onPress={handleOpenPickFinishTime} />
