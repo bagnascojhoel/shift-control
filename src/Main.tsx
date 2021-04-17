@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, StatusBar, Text, View, Button } from 'react-native';
+import { StyleSheet, StatusBar, View, ScrollView } from 'react-native';
 
-import { Common, $V } from '@global-styles';
-import { Period, Time24Hours } from '@model';
-import { PeriodInput, TotalTimeCard } from '@components';
+import { Common, $V, $C } from '@global-styles';
+import { Period } from '@model';
+import { PeriodInput, TotalTimeCard, AddPeriodButton } from '@components';
 import { ObjectUtils, PeriodMathUtils } from '@utils';
 
 export default function Main() {
@@ -38,23 +38,22 @@ export default function Main() {
   
   return (
     <>
-      <StatusBar />
+      <StatusBar/>
       <View style={{...MainStyles.container, ...Common.global}}>
         <TotalTimeCard totalMinutes={totalMinutes}/>
 
-        {periods.map((period, i) => (
-          <View key={`${i}period`} style={MainStyles.periodContainer}>
-            <PeriodInput
-              onChange={(newPeriod: Period) => handleUpdatePeriod(newPeriod, i)}
-              onRemove={() => handleRemovePeriod(i)}
-              style={MainStyles.periodInput}
-              value={period}
-            />
-          </View>
-        ))}
-
-
-        <Button title="Adicionar período" onPress={handleAddPeriod} />
+        <ScrollView style={MainStyles.periodList}>
+          {periods.map((period, i) => (
+              <PeriodInput
+                onChange={(newPeriod: Period) => handleUpdatePeriod(newPeriod, i)}
+                onRemove={() => handleRemovePeriod(i)}
+                style={MainStyles.periodInput}
+                value={period}
+                key={`${i}period`}
+              />
+          ))}
+        </ScrollView>
+        <AddPeriodButton onPress={handleAddPeriod}/>
       </View>
     </>
   );
@@ -63,14 +62,14 @@ export default function Main() {
 const MainStyles = StyleSheet.create({
   container: {
     ...Common.container,
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(0, 255, 136, 0.04)',
     alignItems: 'center',
   },
-  
-  periodContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginBottom: $V.smallGutter
+
+  periodList: {
+    marginTop: $V.smallGutter,
+    marginBottom: 55,
+    width: '100%',
   },
 
   periodInput: {

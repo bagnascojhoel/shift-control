@@ -1,4 +1,4 @@
-import React, { useReducer, Reducer } from 'react';
+import React, { useReducer, Reducer, useState, useEffect } from 'react';
 import { 
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 
 import { Time24Hours, Period } from '@model';
 import { $C, $V } from '@global-styles';
+import { PeriodMathUtils } from '@utils';
 
 
 import { Icons } from '../icons/icons';
@@ -61,6 +62,7 @@ export function PeriodInput({
     onRemove: () => void,
     style: StyleProp<ViewStyle>
   }) {
+  const [duration, setDuration] = useState<Time24Hours>(null);
   const [{isVisible, action, time}, dispatch] = useReducer<Reducer<PeriodState, PeriodStateAction>>(
     periodReducer,
     {
@@ -98,6 +100,14 @@ export function PeriodInput({
     onRemove();
   }
 
+  const handleSuffix = (duration: Time24Hours): string => {
+    return (duration.hours > 1) ? 'horas' : 'hora';
+  }
+
+  useEffect(() => {
+    setDuration(PeriodMathUtils.calcDurationTime(value));
+  }, [value]);
+
   return (
     <View {...otherProps}>
       <View style={PeriodInputStyles.container}>
@@ -123,8 +133,12 @@ export function PeriodInput({
             <Icons.Remove large />
           </TouchableOpacity>
         </View>
-
-        <Text style={PeriodInputStyles.periodTotal}>Primeiro turno durou 02:56 horas</Text>
+        {
+          duration && duration.isNotEmpty() && 
+          <Text style={PeriodInputStyles.periodTotal}>
+            Turno durou {duration.toString()} {handleSuffix(duration)} 
+          </Text>
+        }
       </View>
 
       {
@@ -154,17 +168,7 @@ const PeriodInputStyles = StyleSheet.create({
     ...shared.container,
     marginBottom: $V.smallGutter,
     backgroundColor: $C.lightPurple,
-    shadowColor: $C.lightPurple,
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.39,
-    shadowRadius: 8.30,
-    
-    elevation: 13,
   },
-  // box-shadow: 0px 4px 15px 0px #686B9E26;
 
   innerContainer: {
     ...shared.container,
@@ -174,7 +178,8 @@ const PeriodInputStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 2,
-    borderColor: $C.lightPurple,
+    borderColor: $C.white,
+    borderStyle: 'dashed',
     backgroundColor: $C.white,
   },
 
@@ -183,12 +188,13 @@ const PeriodInputStyles = StyleSheet.create({
   },
 
   remove: {
-    right: -35
+    right: -30
   },
 
   periodTotal: {
     ...shared.leftFix,
     fontSize: $V.fontSizeSmall,
+    marginTop: 2,
     marginBottom: 4,
     color: $C.darkPurple,
   }

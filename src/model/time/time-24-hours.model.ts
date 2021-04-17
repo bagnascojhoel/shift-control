@@ -95,6 +95,10 @@ export class Time24Hours {
     return this.hours === 0;
   }
 
+  public isNotEmpty(): boolean {
+    return this.toMinutes() !== 0;
+  }
+
   set minutes(minute: number) {  
     this.date.setMinutes(minute);
   }

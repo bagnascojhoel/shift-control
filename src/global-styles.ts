@@ -24,6 +24,6 @@ export const Common = {
 
   container: {
     flex: 1,
-    margin: $V.gutter,
+    padding: $V.gutter,
   },
 };

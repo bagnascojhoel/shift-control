@@ -40,7 +40,6 @@ const Shared = StyleSheet.create({
 const TotalTimeCardStyles = StyleSheet.create({
   container: {
     marginTop: $V.smallGutter,
-    marginBottom: $V.largeGutter,
     paddingHorizontal: $V.largeGutter,
     paddingVertical: $V.smallGutter,
     borderRadius: 30,
