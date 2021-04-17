@@ -1,7 +1,7 @@
 import React, { useReducer, Reducer } from 'react';
 import { View, Button, StyleProp, ViewStyle } from 'react-native';
 
-import { Time, Period } from '@model';
+import { Time24Hours, Period } from '@model';
 
 import { TimePicker } from '../time-picker/time-picker';
 
@@ -9,7 +9,7 @@ type PeriodStateActionType = 'OPEN_START_TIME' | 'OPEN_FINISH_TIME' | 'CLOSE';
 type PeriodStateAction = { type: PeriodStateActionType, period: Period, parentAction: Function };
 type PeriodState = {
   isVisible: boolean,
-  time: Time,
+  time: Time24Hours,
   action: Function,
 };
 
@@ -60,7 +60,7 @@ export function PeriodInput({
   const handleOpenPickStartTime = () => {
     dispatch({
       type: 'OPEN_START_TIME',
-      parentAction: (aTime: Time) => onChange(new Period(aTime, value.end)),
+      parentAction: (aTime: Time24Hours) => onChange(new Period(aTime, value.end)),
       period: value
     });
   }
@@ -68,7 +68,7 @@ export function PeriodInput({
   const handleOpenPickFinishTime = () => {
     dispatch({
       type: 'OPEN_FINISH_TIME',
-      parentAction: (aTime: Time) => onChange(new Period(value.start, aTime)),
+      parentAction: (aTime: Time24Hours) => onChange(new Period(value.start, aTime)),
       period: value
     });
   }

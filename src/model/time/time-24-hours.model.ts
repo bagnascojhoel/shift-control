@@ -6,18 +6,20 @@ function addPrecedingZero(aNumber: number, comparison: ComparisonFunction): stri
   return comparison(aNumber) ? `0${aNumber}` : `${aNumber}`
 }
 
-export class Time {
+export class Time24Hours {
   private date: Date;
   
   constructor();
   constructor(value: Date);
   constructor(value: string);
+  constructor(value: number);
   constructor(value: number, value1: number);
   constructor(value?: string | Date | number, value1?: number) {
-    this.date = (TypeCheckingUtils.isNullOrUndefined(value)) ? Time.buildEmptyDate() :
-      (value instanceof Date) ? Time.buildDateFromDate(value) :
-      (typeof value === 'string' && value1 === undefined) ? Time.buildDateFromString(value) :
-      (typeof value === 'number') ? Time.buildDateFromNumbers(value, value1) :
+    this.date = (TypeCheckingUtils.isNullOrUndefined(value)) ? Time24Hours.buildEmptyDate() :
+      (value instanceof Date) ? Time24Hours.buildDateFromDate(value) :
+      (typeof value === 'string' && value1 === undefined) ? Time24Hours.buildDateFromString(value) :
+      (typeof value === 'number' && value1 === undefined) ? Time24Hours.buildDateFromMinutes(value) :
+      (typeof value === 'number') ? Time24Hours.buildDateFromNumbers(value, value1) :
       null;
   }
 
@@ -38,19 +40,18 @@ export class Time {
     return result;
   }
 
-  private static buildDateFromNumbers(hours: number, minutes: number) {
+  private static buildDateFromNumbers(hours: number, minutes: number): Date {
     const result = new Date();
     result.setHours(hours);
     result.setMinutes(minutes);
     return result;
   }
 
-  public static fromMinutes(minutes: number): Time {
-    return new Time(Math.floor(minutes / 60), minutes % 60);
-  }
-
-  public static empty(): Time {
-    return new Time('00:00');
+  private static buildDateFromMinutes(minutes: number): Date {
+    const result = new Date();
+    result.setHours(Math.floor(minutes / 60));
+    result.setMinutes(Math.floor(minutes % 60));
+    return result;
   }
 
   public toDate(): Date {
@@ -70,11 +71,11 @@ export class Time {
     return `${hours}:${minutes}`;
   }
 
-  public isLaterThan(aTime: Time): boolean {
+  public isLaterThan(aTime: Time24Hours): boolean {
     return this.hours > aTime.hours || (this.hours === aTime.hours && this.minutes > aTime.minutes);
   }
 
-  public isEqualTo(aTime: Time): boolean {
+  public isEqualTo(aTime: Time24Hours): boolean {
     return this.hours === aTime.hours && this.minutes === aTime.minutes;
   }
 

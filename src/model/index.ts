@@ -1,2 +1,2 @@
 export { Period } from './period/period.model';
-export { Time } from './time/time.model';
+export { Time24Hours } from './time/time-24-hours.model';

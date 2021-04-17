@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, StatusBar, Text, View, Button } from 'react-native';
 import { Common, Variables } from '@global-styles';
-import { Period, Time } from '@model';
+import { Period, Time24Hours } from '@model';
 import { PeriodInput } from '@components';
 import { ObjectUtils, PeriodMathUtils } from '@utils';
 
 export default function Main() {
   const [periods, setPeriods] = useState<Period[]>([new Period()]);
-  const [total, setTotal] = useState<Time>(Time.empty());
+  const [totalMinutes, setTotalMinutes] = useState<number>(0);
 
   const handleAddPeriod = () => {
     setPeriods([...periods, new Period()]);  
@@ -26,15 +26,11 @@ export default function Main() {
   } 
   
   useEffect(() => {
-    setTotal(
-      Time.fromMinutes(
-        periods.reduce(
-          (totalMinutes, period) => totalMinutes + PeriodMathUtils.calcDuration(period)
-          , 0
-        )
-      )
-    );
-
+    const total = periods.reduce(
+        (totalMinutes, period) => totalMinutes + PeriodMathUtils.calcDuration(period)
+        , 0
+      );
+    setTotalMinutes(total);
   }, [periods])
   
   return (
@@ -43,7 +39,7 @@ export default function Main() {
       <View style={MainStyles.container}>
         <Button title="Adicionar período" onPress={handleAddPeriod} />
         <Text style={Common.pageTitle}>Shift Control</Text>
-        <Text>Total: {total.toString()}</Text>
+        <Text>Total: {new Time24Hours(totalMinutes).toString()}</Text>
 
         {periods.map((period, i) => (
           <View key={`${i}period`} style={MainStyles.periodContainer}>
