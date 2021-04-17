@@ -1,9 +1,20 @@
 import React, { useReducer, Reducer } from 'react';
-import { View, Button, StyleProp, ViewStyle } from 'react-native';
+import { 
+  View,
+  Text,
+  StyleProp, 
+  ViewStyle, 
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import { Time24Hours, Period } from '@model';
+import { $C, $V } from '@global-styles';
 
+
+import { Icons } from '../icons/icons';
 import { TimePicker } from '../time-picker/time-picker';
+import { TimeButton } from '../time-button/time-button';
 
 type PeriodStateActionType = 'OPEN_START_TIME' | 'OPEN_FINISH_TIME' | 'CLOSE';
 type PeriodStateAction = { type: PeriodStateActionType, period: Period, parentAction: Function };
@@ -38,14 +49,16 @@ function periodReducer(state: PeriodState, action: PeriodStateAction) {
       };
   }
 }
-// TODO melhorar a organização e relação deste componente com TimePicker
+
 export function PeriodInput({
    value,
    onChange,
+   onRemove,
    ...otherProps
   }:{
     value: Period,
     onChange: (time: Period) => void,
+    onRemove: () => void,
     style: StyleProp<ViewStyle>
   }) {
   const [{isVisible, action, time}, dispatch] = useReducer<Reducer<PeriodState, PeriodStateAction>>(
@@ -65,7 +78,7 @@ export function PeriodInput({
     });
   }
 
-  const handleOpenPickFinishTime = () => {
+  const handleOpenPickEndTime = () => {
     dispatch({
       type: 'OPEN_FINISH_TIME',
       parentAction: (aTime: Time24Hours) => onChange(new Period(value.start, aTime)),
@@ -81,11 +94,38 @@ export function PeriodInput({
     });
   }
 
+  const handleOnRemove = () => {
+    onRemove();
+  }
+
   return (
     <View {...otherProps}>
-      <Button title={`Started at ${value.start.toString()}`} onPress={handleOpenPickStartTime} />
+      <View style={PeriodInputStyles.container}>
 
-      <Button title={`Ended at ${value.end.toString()}`} onPress={handleOpenPickFinishTime} />
+        <View style={PeriodInputStyles.innerContainer}>
+          <Icons.Clock />
+          
+          <TimeButton
+            label="Início"
+            time={value.start}
+            onPress={handleOpenPickStartTime}
+            style={PeriodInputStyles.timeButton}
+          />
+          
+          <TimeButton
+            label="Fim" 
+            time={value.end} 
+            onPress={handleOpenPickEndTime}
+            style={PeriodInputStyles.timeButton}
+          />
+
+          <TouchableOpacity style={PeriodInputStyles.remove} onPress={handleOnRemove}>
+            <Icons.Remove large />
+          </TouchableOpacity>
+        </View>
+
+        <Text style={PeriodInputStyles.periodTotal}>Primeiro turno durou 02:56 horas</Text>
+      </View>
 
       {
         isVisible &&
@@ -98,3 +138,58 @@ export function PeriodInput({
     </View>
   );
 }
+
+const shared = StyleSheet.create({
+  container: {
+    borderRadius: 30,
+  },
+
+  leftFix: {
+    paddingLeft: $V.gutter,
+  }
+});
+
+const PeriodInputStyles = StyleSheet.create({
+  container: {
+    ...shared.container,
+    marginBottom: $V.smallGutter,
+    backgroundColor: $C.lightPurple,
+    shadowColor: $C.lightPurple,
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.39,
+    shadowRadius: 8.30,
+    
+    elevation: 13,
+  },
+  // box-shadow: 0px 4px 15px 0px #686B9E26;
+
+  innerContainer: {
+    ...shared.container,
+    ...shared.leftFix,
+    paddingHorizontal: $V.smallGutter,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 2,
+    borderColor: $C.lightPurple,
+    backgroundColor: $C.white,
+  },
+
+  timeButton: {
+    marginLeft: $V.gutter,
+  },
+
+  remove: {
+    right: -35
+  },
+
+  periodTotal: {
+    ...shared.leftFix,
+    fontSize: $V.fontSizeSmall,
+    marginBottom: 4,
+    color: $C.darkPurple,
+  }
+});

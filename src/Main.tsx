@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, StatusBar, Text, View, Button } from 'react-native';
-import { Common, Variables } from '@global-styles';
+
+import { Common, $V } from '@global-styles';
 import { Period, Time24Hours } from '@model';
-import { PeriodInput } from '@components';
+import { PeriodInput, TotalTimeCard } from '@components';
 import { ObjectUtils, PeriodMathUtils } from '@utils';
 
 export default function Main() {
@@ -38,21 +39,22 @@ export default function Main() {
   return (
     <>
       <StatusBar />
-      <View style={MainStyles.container}>
-        <Button title="Adicionar período" onPress={handleAddPeriod} />
-        <Text style={Common.pageTitle}>Shift Control</Text>
-        <Text>Total: {new Time24Hours(totalMinutes).toString()}</Text>
+      <View style={{...MainStyles.container, ...Common.global}}>
+        <TotalTimeCard totalMinutes={totalMinutes}/>
 
         {periods.map((period, i) => (
           <View key={`${i}period`} style={MainStyles.periodContainer}>
             <PeriodInput
               onChange={(newPeriod: Period) => handleUpdatePeriod(newPeriod, i)}
+              onRemove={() => handleRemovePeriod(i)}
               style={MainStyles.periodInput}
               value={period}
             />
-            <Button title={`Remover ${i}`} onPress={() => handleRemovePeriod(i)} />
           </View>
         ))}
+
+
+        <Button title="Adicionar período" onPress={handleAddPeriod} />
       </View>
     </>
   );
@@ -64,12 +66,14 @@ const MainStyles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
   },
+  
   periodContainer: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: Variables.smallGutter
+    marginBottom: $V.smallGutter
   },
+
   periodInput: {
-    marginRight: Variables.smallGutter
+    marginRight: $V.smallGutter
   }
 });

@@ -12,6 +12,7 @@
     "moduleResolution": "node",
     "baseUrl": "src",
     "paths": {
+      "@assets": ["assets"],
       "@global-styles": ["global-styles.ts"],
       "@model": ["model"],
       "@components": ["ui/components"],
