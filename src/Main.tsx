@@ -3,32 +3,38 @@ import { StyleSheet, StatusBar, Text, View, Button } from 'react-native';
 import { Common, Variables } from '@global-styles';
 import { Period, Time } from '@model';
 import { PeriodInput } from '@components';
+import { ObjectUtils, PeriodMathUtils } from '@utils';
 
 export default function Main() {
   const [periods, setPeriods] = useState<Period[]>([new Period()]);
-  const [total, setTotal] = useState<Time>(new Time());
+  const [total, setTotal] = useState<Time>(Time.empty());
 
   const handleAddPeriod = () => {
     setPeriods([...periods, new Period()]);  
   };
 
   const handleUpdatePeriod = (aPeriod: Period, i: number) => {
-    console.log('update period')
     const newPeriodList: Period[] = [...periods];
-    newPeriodList[i] = aPeriod;
+    newPeriodList[i] = ObjectUtils.cloneDeep(aPeriod);
     setPeriods(newPeriodList);
   };
-
+  
   const handleRemovePeriod = (index: number) => {
     const newPeriods = [...periods];
     newPeriods.splice(index, 1);
-    console.log(newPeriods);
     setPeriods(newPeriods);
   } 
-
+  
   useEffect(() => {
-    console.log(periods);
-    setTotal(periods.reduce((total, period) => total.add(period.duration), Time.getEmpty()));
+    setTotal(
+      Time.fromMinutes(
+        periods.reduce(
+          (totalMinutes, period) => totalMinutes + PeriodMathUtils.calcDuration(period)
+          , 0
+        )
+      )
+    );
+
   }, [periods])
   
   return (

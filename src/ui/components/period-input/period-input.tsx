@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useReducer, Reducer } from 'react';
-import { View, Button } from 'react-native';
+import React, { useReducer, Reducer } from 'react';
+import { View, Button, StyleProp, ViewStyle } from 'react-native';
 
 import { Time, Period } from '@model';
 
@@ -25,7 +25,7 @@ function periodReducer(state: PeriodState, action: PeriodStateAction) {
       case 'OPEN_FINISH_TIME':
       return {
         isVisible: true,
-        time: action.period.finish,
+        time: action.period.end,
         action: action.parentAction,
       };
 
@@ -45,7 +45,8 @@ export function PeriodInput({
    ...otherProps
   }:{
     value: Period,
-    onChange: (time: Period) => void 
+    onChange: (time: Period) => void,
+    style: StyleProp<ViewStyle>
   }) {
   const [{isVisible, action, time}, dispatch] = useReducer<Reducer<PeriodState, PeriodStateAction>>(
     periodReducer,
@@ -59,7 +60,7 @@ export function PeriodInput({
   const handleOpenPickStartTime = () => {
     dispatch({
       type: 'OPEN_START_TIME',
-      parentAction: (aTime: Time) => onChange(new Period(aTime, value.finish)),
+      parentAction: (aTime: Time) => onChange(new Period(aTime, value.end)),
       period: value
     });
   }
@@ -80,18 +81,11 @@ export function PeriodInput({
     });
   }
 
-  // TODO desenvolver uma forma de lidar com início maior que o fim
-  // periodStart = 15:30
-  // periodFinish = 12:23
-  // Talvez considerar que seja o dia seguinte/
-
-  // TODO corrigir soma das durações; atualmente 8:55 -> 12:06 + 13:03 -> 16:09 = 6:55
-  //                                              03:11           03:06
   return (
     <View {...otherProps}>
       <Button title={`Started at ${value.start.toString()}`} onPress={handleOpenPickStartTime} />
 
-      <Button title={`Finished at ${value.finish.toString()}`} onPress={handleOpenPickFinishTime} />
+      <Button title={`Ended at ${value.end.toString()}`} onPress={handleOpenPickFinishTime} />
 
       {
         isVisible &&

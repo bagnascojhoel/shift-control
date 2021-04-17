@@ -45,59 +45,29 @@ export class Time {
     return result;
   }
 
-  public static getEmpty(): Time {
+  public static fromMinutes(minutes: number): Time {
+    return new Time(Math.floor(minutes / 60), minutes % 60);
+  }
+
+  public static empty(): Time {
     return new Time('00:00');
   }
 
-  public static getLatest(time1: Time, time2: Time): Time {
-    return time1.isLaterThan(time2) ? time1 : time2;
-  }
-
-  public static getSoonest(time1: Time, time2: Time): Time {
-    return time1.isLaterThan(time2) ? time2 : time1;
-  }
-
-  public static toDate(time: Time): Date {
+  public toDate(): Date {
     const result = new Date;
-    result.setHours(parseInt(time.hours.toString()))
-    result.setMinutes(parseInt(time.minutes.toString()))
+    result.setHours(parseInt(this.hours.toString()))
+    result.setMinutes(parseInt(this.minutes.toString()))
     return result;
   }
 
-  public static toMinutes(aTime: Time): number {
-    return aTime.minutes + aTime.hours * 60;
-  }
-
-  public static toString(aTime: Time): string {
-    const minutes = addPrecedingZero(aTime.minutes, (a) => a < 10);
-    const hours = addPrecedingZero(aTime.hours, (a) => a < 10);
-    return `${hours}:${minutes}`;
-  }
-
-  public toDate(): Date {
-    return Time.toDate(this);
-  }
-
   public toMinutes(): number {
-    return Time.toMinutes(this);
+    return this.minutes + this.hours * 60;
   }
 
   public toString(): string {
-    return Time.toString(this);
-  }
-
-  public add(aTime: Time): Time {
-    const minutesTotal = aTime.toMinutes() + this.toMinutes();
-    const hours = Math.floor(minutesTotal / 60);
-    const minutes = minutesTotal % 60;
-    return new Time(hours, minutes);
-  }
-
-  public sub(aTime: Time): Time {
-    const minutesDifference = Math.abs(aTime.toMinutes() - this.toMinutes());
-    const hours = Math.floor(minutesDifference / 60);
-    const minutes = minutesDifference % 60;
-    return new Time(hours, minutes);
+    const minutes = addPrecedingZero(this.minutes, (a) => a < 10);
+    const hours = addPrecedingZero(this.hours, (a) => a < 10);
+    return `${hours}:${minutes}`;
   }
 
   public isLaterThan(aTime: Time): boolean {
@@ -108,18 +78,20 @@ export class Time {
     return this.hours === aTime.hours && this.minutes === aTime.minutes;
   }
 
-
+  public isMidnight(): boolean {
+    return this.hours === 0;
+  }
 
   set minutes(minute: number) {  
     this.date.setMinutes(minute);
   }
 
-  set hours(hour: number) {
-    this.date.setHours(hour);
-  }
-
   get minutes(): number {
     return this.date.getMinutes();
+  }
+
+  set hours(hour: number) {
+    this.date.setHours(hour);
   }
 
   get hours(): number {

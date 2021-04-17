@@ -28,7 +28,7 @@ export function TimePicker({
   }
 
   return <DateTimePicker 
-      value={Time.toDate(value)}
+      value={value.toDate()}
       onChange={handleOnChange}
       mode="time"
     />;

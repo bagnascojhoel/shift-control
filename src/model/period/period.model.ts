@@ -1,28 +1,26 @@
+import { TimeMathUtils } from '@utils';
+
 import { Time } from '../time/time.model';
 
 export class Period {
   private _start: Time;
 
-  private _finish: Time;
+  private _end: Time;
 
-  constructor(start?: Time, finish?: Time) {
+  constructor(start?: Time, end?: Time) {
     this._start = start ?? new Time();
-    this._finish = finish ?? new Time();
+    this._end = end ?? TimeMathUtils.incrementHours(this._start);
   }
 
   get start(): Time {
     return this._start;
   }
 
-  get finish(): Time {
-    return this._finish;
-  }
-
-  get duration(): Time {
-    return this._finish.sub(this._start);
+  get end(): Time {
+    return this._end;
   }
 
   public toString(): string {
-    return `started at ${this._start.toString()} and finished at ${this._finish.toString()}`;
+    return `started at ${this._start.toString()} and finished at ${this._end.toString()}`;
   }
 }
