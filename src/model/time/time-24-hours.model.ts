@@ -1,9 +1,21 @@
-import { TypeCheckingUtils } from '@utils';
+import { InvalidTimeStringError } from '@errors';
 
 type ComparisonFunction = (aNumber: number) => boolean;
 
 function addPrecedingZero(aNumber: number, comparison: ComparisonFunction): string {
   return comparison(aNumber) ? `0${aNumber}` : `${aNumber}`
+}
+
+function validateTimeString(aString: string): void {
+  if (aString.indexOf(':') === -1)
+    throw new InvalidTimeStringError('The time string must follow the pattern: XX:XX.');
+
+  const [hours, minutes] = aString.split(':').map(parseInt);
+
+  if (hours < 0 || hours > 23)
+    throw new InvalidTimeStringError('The time string must have hours between 0 and 23.');
+  else if (minutes < 0 || minutes > 59) 
+    throw new InvalidTimeStringError('The time string must have minutes between 0 and 59.');
 }
 
 export class Time24Hours {
@@ -15,7 +27,7 @@ export class Time24Hours {
   constructor(value: number);
   constructor(value: number, value1: number);
   constructor(value?: string | Date | number, value1?: number) {
-    this.date = (TypeCheckingUtils.isNullOrUndefined(value)) ? Time24Hours.buildEmptyDate() :
+    this.date = (value === null || value === undefined) ? Time24Hours.buildEmptyDate() :
       (value instanceof Date) ? Time24Hours.buildDateFromDate(value) :
       (typeof value === 'string' && value1 === undefined) ? Time24Hours.buildDateFromString(value) :
       (typeof value === 'number' && value1 === undefined) ? Time24Hours.buildDateFromMinutes(value) :
@@ -32,7 +44,7 @@ export class Time24Hours {
   }
 
   private static buildDateFromString(date: string): Date {
-    TypeCheckingUtils.validateTimeString(date);
+    validateTimeString(date);
     const [hours, minutes] = date.split(':').map((v) => parseInt(v, 10));
     const result = new Date();
     result.setHours(hours);

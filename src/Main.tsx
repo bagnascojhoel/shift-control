@@ -10,7 +10,9 @@ export default function Main() {
   const [totalMinutes, setTotalMinutes] = useState<number>(0);
 
   const handleAddPeriod = () => {
-    setPeriods([...periods, new Period()]);  
+    const previousPeriod = periods[periods.length -1];
+    const nextPeriod = previousPeriod ? new Period(previousPeriod.end) : new Period();
+    setPeriods([...periods, nextPeriod]);  
   };
 
   const handleUpdatePeriod = (aPeriod: Period, i: number) => {

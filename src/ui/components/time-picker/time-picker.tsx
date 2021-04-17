@@ -2,7 +2,7 @@ import React from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { InvalidRequiredPropError } from '@errors';
-import { Time } from '@model';
+import { Time24Hours } from '@model';
 
 // TODO criar um jeito de definir props como required, talvez uma HOC 
 export function TimePicker({
@@ -10,9 +10,9 @@ export function TimePicker({
   onClose,
   value
 }: {
-  onChange: Function | ((t: Time) => void),
+  onChange: Function | ((t: Time24Hours) => void),
   onClose: Function | (() => void),
-  value: Time
+  value: Time24Hours
 }) {
 
   if (!onChange) {
@@ -24,7 +24,7 @@ export function TimePicker({
       onClose();
 
     if (aDate)
-      onChange(new Time(aDate));
+      onChange(new Time24Hours(aDate));
   }
 
   return <DateTimePicker 

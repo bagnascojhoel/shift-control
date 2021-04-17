@@ -14,12 +14,10 @@ function sum(before: Time24Hours, after: Time24Hours): Time24Hours {
 }
 
 function sub(before: Time24Hours, after: Time24Hours): Time24Hours {
-  debugger
-  let beforeMinutes = before.toMinutes();
   let afterMinutes = after.toMinutes();
   afterMinutes = after.isMidnight() ? A_DAY_IN_MINUTES : afterMinutes;
   afterMinutes = before.isLaterThan(after) ? afterMinutes + A_DAY_IN_MINUTES : afterMinutes;
-  const minutesDifference = afterMinutes - beforeMinutes;
+  const minutesDifference = afterMinutes - before.toMinutes();
   const hours = Math.floor(minutesDifference / 60);
   const minutes = minutesDifference % 60;
   return new Time24Hours(hours, minutes); 
