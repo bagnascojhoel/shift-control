@@ -21,9 +21,9 @@ export function TotalTimeCard({
     totalMinutes === 0 ?
       DefaultText :
       <>
-        <Text style={TotalTimeCardStyles.text}>Você fez</Text>
-        <Text style={TotalTimeCardStyles.time}>{new Time24Hours(totalMinutes).toString()}</Text>
-        <Text style={TotalTimeCardStyles.text}>hoje</Text>
+        <Text style={TotalTimeCardStyles.text}>
+          Você fez {new Time24Hours(totalMinutes).toString()} hoje
+        </Text>
       </>
     }
   </GradientBackground>
@@ -40,7 +40,7 @@ const Shared = StyleSheet.create({
 const TotalTimeCardStyles = StyleSheet.create({
   container: {
     marginTop: $V.smallGutter,
-    paddingHorizontal: $V.largeGutter,
+    paddingHorizontal: $V.gutter,
     paddingVertical: $V.smallGutter,
     borderRadius: 30,
     flexDirection: 'row',
