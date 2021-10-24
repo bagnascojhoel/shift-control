@@ -62,7 +62,6 @@ export default function Main() {
 const MainStyles = StyleSheet.create({
   container: {
     ...Common.container,
-    backgroundColor: 'rgba(0, 255, 136, 0.04)',
     alignItems: 'center',
   },
 
