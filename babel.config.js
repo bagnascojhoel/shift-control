@@ -10,7 +10,7 @@ module.exports = function (api) {
             '@assets': './src/assets',
             '@global-styles': './src/global-styles.ts',
             '@model': './src/model/',
-            '@components': './src/ui/components/',
+            '@components': './src/components/',
             '@utils': './src/utils/',
             '@errors': './src/errors/',
           },

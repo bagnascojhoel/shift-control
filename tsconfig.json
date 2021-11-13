@@ -15,7 +15,7 @@
       "@assets": ["assets"],
       "@global-styles": ["global-styles.ts"],
       "@model": ["model"],
-      "@components": ["ui/components"],
+      "@components": ["components"],
       "@utils": ["utils"],
       "@errors": ["errors"]
     }
