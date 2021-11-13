@@ -61,8 +61,7 @@ export function PeriodInput({
 }: {
   value: Period;
   onChange: (time: Period) => void;
-  onRemove: () => void;
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 }) {
   const [duration, setDuration] = useState<Time24Hours>(null);
   const [{ isVisible, action, time }, dispatch] = useReducer<

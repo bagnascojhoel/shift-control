@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, StatusBar, Dimensions } from 'react-native';
 import { Box, Text, Center, useToast, Button } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import _ from 'lodash';
 
 import { $V } from '@global-styles';
 import { Period } from '@model';
-import { TotalTimeCard, AddPeriodButton } from '@components';
-import { PeriodMathUtils } from '@utils';
+import { TotalTimeCard, AddPeriodButton, PeriodInput } from '@components';
+import { PeriodMathUtils, ArrayUtils } from '@utils';
 
 export default function Main() {
   const [periods, setPeriods] = useState<Period[]>([new Period()]);
@@ -14,9 +15,7 @@ export default function Main() {
 
   const handleAddPeriod = () => {
     const lastPeriod = periods[periods.length - 1];
-    const nextPeriod = lastPeriod
-      ? Period.buildNextFrom(lastPeriod)
-      : new Period();
+    const nextPeriod = lastPeriod ? Period.buildNextFrom(lastPeriod) : new Period();
 
     setPeriods([...periods, nextPeriod]);
   };
@@ -28,14 +27,30 @@ export default function Main() {
     }
   };
 
+  const handlePeriodChange = (newPeriod: Period, key: number) => {
+    const changedPeriodIndex = periods.findIndex(({ key: currKey }) => currKey === key);
+
+    const newPeriods = ArrayUtils.replace(periods, changedPeriodIndex, newPeriod);
+    setPeriods(newPeriods);
+  };
+
   useEffect(() => {
     const total = periods.reduce(
-      (totalMinutes, period) =>
-        totalMinutes + PeriodMathUtils.calcDuration(period),
+      (totalMinutes, period) => totalMinutes + PeriodMathUtils.calcDuration(period),
       0,
     );
     setTotalMinutes(total);
   }, [periods]);
+
+  const renderPeriodInput = ({ item }: { item: Period }) => {
+    return (
+      <PeriodInput
+        key={item.key}
+        value={item}
+        onChange={(period) => handlePeriodChange(period, item.key)}
+      />
+    );
+  };
 
   return (
     <>
@@ -58,20 +73,12 @@ export default function Main() {
   );
 }
 
-function renderPeriodInput({ item: period }) {
-  return (
-    <Box key={period.id} bg="amber.200" width="full" height="20">
-      <Text fontSize="xl">{`Period: ${period.key}`}</Text>
-    </Box>
-  );
-}
-
 const MainStyles = StyleSheet.create({
   periodList: {
     marginTop: $V.smallGutter,
     marginBottom: 55,
-    width: '90%',
-    backgroundColor: 'green',
+    width: '100%',
+    paddingHorizontal: $V.largeGutter,
   },
 
   periodInput: {
