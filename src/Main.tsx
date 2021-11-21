@@ -62,7 +62,7 @@ export default function Main() {
   const renderPeriodInput = ({ item }: { item: Period }) => {
     return (
       <PeriodInput
-        key={item.key}
+        key={`${item.key}`}
         value={item}
         onChange={(period) => handlePeriodChange(period, item.key)}
       />
@@ -72,9 +72,9 @@ export default function Main() {
   return (
     <Flex size="full">
       <Box width="full" bg="gray.500" padding="8">
-        <Heading size="xl" color="white" fontWeight="normal">
+        <Heading size="lg" color="white" fontWeight="normal">
           Today, you have worked for{' '}
-          <Heading size="xl" color="white" fontWeight="bold">
+          <Heading size="lg" color="white" fontWeight="bold">
             {totalTimeText}
           </Heading>
         </Heading>
@@ -92,7 +92,10 @@ export default function Main() {
       <Fab
         onPress={handleAddPeriod}
         colorScheme="gray"
-        icon={<Icon as={<MaterialIcons name="add" />} size="lg" color="black" />}
+        position="absolute"
+        right="8"
+        bottom="8"
+        icon={<Icon as={<MaterialIcons name="add" />} size="md" color="black" />}
       />
     </Flex>
   );

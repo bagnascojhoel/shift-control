@@ -27,10 +27,10 @@ export function TimeButton({
 
   return (
     <Pressable onPress={handleOnPress} padding="2">
-      <Text fontSize="2xl" fontWeight="bold">
+      <Text fontSize="xl" fontWeight="bold" lineHeight="md">
         {trimLabel(label)}
       </Text>
-      <Text fontSize="4xl" fontWeight="bold">
+      <Text fontSize="2xl" fontWeight="bold" lineHeight="md">
         {time.toString()}
       </Text>
     </Pressable>
