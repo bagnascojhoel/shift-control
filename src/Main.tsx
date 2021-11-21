@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 import { $V } from '@global-styles';
 import { Period } from '@model';
-import { TotalTimeCard, PeriodInput } from '@components';
+import { PeriodInput } from '@components';
 import { PeriodMathUtils, ArrayUtils } from '@utils';
 
 const EMPTY_TOTAL_TIME_TEXT: string = 'no time';
@@ -27,14 +27,15 @@ export default function Main() {
   function handleSwipeValueChange({ key, value }) {
     if (value < -Dimensions.get('window').width) {
       const remainingPeriods = periods.filter((period) => period.key !== key);
+
       setPeriods(remainingPeriods);
     }
   }
 
   function handlePeriodChange(newPeriod: Period, key: number) {
     const changedPeriodIndex = periods.findIndex(({ key: currKey }) => currKey === key);
+    const newPeriods = ArrayUtils.replaceItem(periods, changedPeriodIndex, newPeriod);
 
-    const newPeriods = ArrayUtils.replace(periods, changedPeriodIndex, newPeriod);
     setPeriods(newPeriods);
   }
 

@@ -68,7 +68,7 @@ export function PeriodInput({
   const handleOpenPickStartTime = () => {
     dispatch({
       type: 'OPEN_START_TIME',
-      parentAction: (aTime: Time24Hours) => onChange(new Period(aTime, value.end)),
+      parentAction: (aTime: Time24Hours) => onChange(new Period(value.key, aTime, value.end)),
       period: value,
     });
   };
@@ -76,7 +76,7 @@ export function PeriodInput({
   const handleOpenPickEndTime = () => {
     dispatch({
       type: 'OPEN_FINISH_TIME',
-      parentAction: (aTime: Time24Hours) => onChange(new Period(value.start, aTime)),
+      parentAction: (aTime: Time24Hours) => onChange(new Period(value.key, value.start, aTime)),
       period: value,
     });
   };
@@ -104,55 +104,12 @@ export function PeriodInput({
         flexDirection="row"
         justifyContent="space-around"
       >
-        <TimeButton
-          label="Início"
-          time={value.start}
-          onPress={handleOpenPickStartTime}
-          style={PeriodInputStyles.timeButton}
-        />
+        <TimeButton label="Início" time={value.start} onPress={handleOpenPickStartTime} />
 
-        <TimeButton
-          label="Fim"
-          time={value.end}
-          onPress={handleOpenPickEndTime}
-          style={PeriodInputStyles.timeButton}
-        />
+        <TimeButton label="Fim" time={value.end} onPress={handleOpenPickEndTime} />
       </Box>
 
       {isVisible && <TimePicker value={time} onChange={action} onClose={handleClosePicker} />}
     </Center>
   );
 }
-
-const shared = StyleSheet.create({
-  container: {
-    borderRadius: 30,
-  },
-
-  leftFix: {
-    paddingLeft: $V.gutter,
-  },
-});
-
-const PeriodInputStyles = StyleSheet.create({
-  container: {
-    ...shared.container,
-    marginBottom: $V.smallGutter,
-  },
-
-  timeButton: {
-    marginLeft: $V.gutter,
-  },
-
-  remove: {
-    right: -30,
-  },
-
-  periodTotal: {
-    ...shared.leftFix,
-    fontSize: $V.fontSizeSmall,
-    marginTop: 2,
-    marginBottom: 4,
-    color: $C.darkPurple,
-  },
-});

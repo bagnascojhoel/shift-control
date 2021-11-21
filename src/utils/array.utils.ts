@@ -1,7 +1,10 @@
-function replace(source: Array<any>, index: number, newItem: any): Array<any> {
-  return source.splice(index, 1, newItem);
+function replaceItem(source: Array<any>, index: number, newItem: any): Array<any> {
+  const firstHalf = source.slice(0, index);
+  const secondHalf = source.slice(index + 1, source.length);
+
+  return firstHalf.concat(newItem, secondHalf);
 }
 
 export const ArrayUtils = {
-  replace,
+  replaceItem,
 };

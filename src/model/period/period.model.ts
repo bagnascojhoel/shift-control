@@ -7,8 +7,8 @@ export class Period {
   private _start: Time24Hours;
   private _end: Time24Hours;
 
-  constructor(start?: Time24Hours, end?: Time24Hours) {
-    this._key = 0;
+  constructor(key?: number, start?: Time24Hours, end?: Time24Hours) {
+    this._key = key ?? 0;
     this._start = start ?? new Time24Hours();
     this._end = end ?? new Time24Hours(this._start.toMinutes() + HOUR_IN_MINUTES);
   }

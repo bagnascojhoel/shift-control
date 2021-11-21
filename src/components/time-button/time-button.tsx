@@ -15,7 +15,6 @@ export function TimeButton({
   onPress,
   label,
   time,
-  style,
 }: {
   onPress: Function | (() => any);
   label: string;
