@@ -1,38 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, StatusBar, Dimensions } from 'react-native';
-import { Box, Text, Center, useToast, Button } from 'native-base';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Dimensions } from 'react-native';
+import { Box, Flex, Heading, Fab, Icon } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import _ from 'lodash';
 
 import { $V } from '@global-styles';
 import { Period } from '@model';
-import { TotalTimeCard, AddPeriodButton, PeriodInput } from '@components';
+import { TotalTimeCard, PeriodInput } from '@components';
 import { PeriodMathUtils, ArrayUtils } from '@utils';
+
+const EMPTY_TOTAL_TIME_TEXT: string = 'no time';
 
 export default function Main() {
   const [periods, setPeriods] = useState<Period[]>([new Period()]);
   const [totalMinutes, setTotalMinutes] = useState<number>(0);
+  const [totalTimeText, setTotalTimeText] = useState<string>(EMPTY_TOTAL_TIME_TEXT);
 
-  const handleAddPeriod = () => {
+  function handleAddPeriod() {
     const lastPeriod = periods[periods.length - 1];
     const nextPeriod = lastPeriod ? Period.buildNextFrom(lastPeriod) : new Period();
 
     setPeriods([...periods, nextPeriod]);
-  };
+  }
 
-  const handleSwipeValueChange = ({ key, value }) => {
+  function handleSwipeValueChange({ key, value }) {
     if (value < -Dimensions.get('window').width) {
       const remainingPeriods = periods.filter((period) => period.key !== key);
       setPeriods(remainingPeriods);
     }
-  };
+  }
 
-  const handlePeriodChange = (newPeriod: Period, key: number) => {
+  function handlePeriodChange(newPeriod: Period, key: number) {
     const changedPeriodIndex = periods.findIndex(({ key: currKey }) => currKey === key);
 
     const newPeriods = ArrayUtils.replace(periods, changedPeriodIndex, newPeriod);
     setPeriods(newPeriods);
-  };
+  }
+
+  useEffect(() => {
+    const hours = Math.floor(totalMinutes / 60);
+    const hoursLabel = hours >= 2 ? 'hours' : 'hour';
+    const minutes = totalMinutes % 60;
+    const minutesLabel = minutes >= 2 ? 'minutes' : 'minute';
+
+    if (!hours && !minutes) setTotalTimeText(EMPTY_TOTAL_TIME_TEXT);
+    else if (!hours) setTotalTimeText(`${minutes} ${minutesLabel}`);
+    else if (!minutes) setTotalTimeText(`${hours} ${hoursLabel}`);
+    else setTotalTimeText(`${hours} ${hoursLabel} and ${minutes} ${minutesLabel}`);
+  }, [totalMinutes]);
 
   useEffect(() => {
     const total = periods.reduce(
@@ -53,35 +69,30 @@ export default function Main() {
   };
 
   return (
-    <>
-      <StatusBar />
-      <Center boxSize="full">
-        <TotalTimeCard totalMinutes={totalMinutes} />
-
+    <Flex size="full">
+      <Box width="full" bg="gray.500" padding="8">
+        <Heading size="xl" color="white" fontWeight="normal">
+          Today, you have worked for{' '}
+          <Heading size="xl" color="white" fontWeight="bold">
+            {totalTimeText}
+          </Heading>
+        </Heading>
+      </Box>
+      <Box size="full" bgColor="black">
         <SwipeListView
           disableRightSwipe
-          style={MainStyles.periodList}
           data={periods}
           onSwipeValueChange={handleSwipeValueChange}
           renderItem={renderPeriodInput}
           rightOpenValue={-Dimensions.get('window').width}
           renderHiddenItem={(data) => <></>}
         />
-        <AddPeriodButton onPress={handleAddPeriod} />
-      </Center>
-    </>
+      </Box>
+      <Fab
+        onPress={handleAddPeriod}
+        colorScheme="gray"
+        icon={<Icon as={<MaterialIcons name="add" />} size="lg" color="black" />}
+      />
+    </Flex>
   );
 }
-
-const MainStyles = StyleSheet.create({
-  periodList: {
-    marginTop: $V.smallGutter,
-    marginBottom: 55,
-    width: '100%',
-    paddingHorizontal: $V.largeGutter,
-  },
-
-  periodInput: {
-    marginRight: $V.smallGutter,
-  },
-});

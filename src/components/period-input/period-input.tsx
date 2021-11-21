@@ -1,12 +1,6 @@
 import React, { useReducer, Reducer, useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleProp,
-  ViewStyle,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Box, Center } from 'native-base';
 
 import { Time24Hours, Period } from '@model';
 import { $C, $V } from '@global-styles';
@@ -61,7 +55,6 @@ export function PeriodInput({
 }: {
   value: Period;
   onChange: (time: Period) => void;
-  style?: StyleProp<ViewStyle>;
 }) {
   const [duration, setDuration] = useState<Time24Hours>(null);
   const [{ isVisible, action, time }, dispatch] = useReducer<
@@ -75,8 +68,7 @@ export function PeriodInput({
   const handleOpenPickStartTime = () => {
     dispatch({
       type: 'OPEN_START_TIME',
-      parentAction: (aTime: Time24Hours) =>
-        onChange(new Period(aTime, value.end)),
+      parentAction: (aTime: Time24Hours) => onChange(new Period(aTime, value.end)),
       period: value,
     });
   };
@@ -84,8 +76,7 @@ export function PeriodInput({
   const handleOpenPickEndTime = () => {
     dispatch({
       type: 'OPEN_FINISH_TIME',
-      parentAction: (aTime: Time24Hours) =>
-        onChange(new Period(value.start, aTime)),
+      parentAction: (aTime: Time24Hours) => onChange(new Period(value.start, aTime)),
       period: value,
     });
   };
@@ -103,33 +94,33 @@ export function PeriodInput({
   }, [value]);
 
   return (
-    <View {...otherProps}>
-      <View style={PeriodInputStyles.container}>
-        <View style={PeriodInputStyles.innerContainer}>
-          <TimeButton
-            label="Início"
-            time={value.start}
-            onPress={handleOpenPickStartTime}
-            style={PeriodInputStyles.timeButton}
-          />
-
-          <TimeButton
-            label="Fim"
-            time={value.end}
-            onPress={handleOpenPickEndTime}
-            style={PeriodInputStyles.timeButton}
-          />
-        </View>
-      </View>
-
-      {isVisible && (
-        <TimePicker
-          value={time}
-          onChange={action}
-          onClose={handleClosePicker}
+    <Center {...otherProps} mt="4">
+      <Box
+        width="5/6"
+        display="flex"
+        borderRadius="md"
+        bg="gray.200"
+        shadow="4"
+        flexDirection="row"
+        justifyContent="space-around"
+      >
+        <TimeButton
+          label="Início"
+          time={value.start}
+          onPress={handleOpenPickStartTime}
+          style={PeriodInputStyles.timeButton}
         />
-      )}
-    </View>
+
+        <TimeButton
+          label="Fim"
+          time={value.end}
+          onPress={handleOpenPickEndTime}
+          style={PeriodInputStyles.timeButton}
+        />
+      </Box>
+
+      {isVisible && <TimePicker value={time} onChange={action} onClose={handleClosePicker} />}
+    </Center>
   );
 }
 
@@ -147,20 +138,6 @@ const PeriodInputStyles = StyleSheet.create({
   container: {
     ...shared.container,
     marginBottom: $V.smallGutter,
-    backgroundColor: $C.lightPurple,
-  },
-
-  innerContainer: {
-    ...shared.container,
-    ...shared.leftFix,
-    paddingHorizontal: $V.smallGutter,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderWidth: 2,
-    borderColor: $C.white,
-    borderStyle: 'dashed',
-    backgroundColor: $C.white,
   },
 
   timeButton: {

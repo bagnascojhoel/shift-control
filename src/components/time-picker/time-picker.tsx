@@ -13,9 +13,7 @@ export function TimePicker({
   value: Time24Hours;
 }) {
   if (!onChange) {
-    throw new InvalidRequiredPropError(
-      `The prop 'onChange' cannot be null or undefined.`,
-    );
+    throw new InvalidRequiredPropError(`The prop 'onChange' cannot be null or undefined.`);
   }
 
   const handleOnChange = (_, aDate) => {
@@ -24,11 +22,5 @@ export function TimePicker({
     if (aDate) onChange(new Time24Hours(aDate));
   };
 
-  return (
-    <DateTimePicker
-      value={value.toDate()}
-      onChange={handleOnChange}
-      mode="time"
-    />
-  );
+  return <DateTimePicker value={value.toDate()} onChange={handleOnChange} mode="time" />;
 }

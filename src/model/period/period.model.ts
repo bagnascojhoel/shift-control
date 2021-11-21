@@ -1,4 +1,4 @@
-import { Time24Hours } from '../time/time-24-hours.model';
+import { Time24Hours } from '../time24Hours/time-24-hours.model';
 
 const HOUR_IN_MINUTES = 60;
 
@@ -10,8 +10,7 @@ export class Period {
   constructor(start?: Time24Hours, end?: Time24Hours) {
     this._key = 0;
     this._start = start ?? new Time24Hours();
-    this._end =
-      end ?? new Time24Hours(this._start.toMinutes() + HOUR_IN_MINUTES);
+    this._end = end ?? new Time24Hours(this._start.toMinutes() + HOUR_IN_MINUTES);
   }
 
   set key(key: number) {

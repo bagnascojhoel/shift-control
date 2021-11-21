@@ -1,21 +1,14 @@
-import React from 'react'
-import {
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ViewStyle,
-} from 'react-native';
+import React from 'react';
+import { ViewStyle } from 'react-native';
+import { Text, Pressable } from 'native-base';
 
 import { Time24Hours } from '@model';
-import { $V, $C } from '@global-styles';
 
 const MAX_LABEL_LENGTH = 10;
 
 function trimLabel(aString: string): string {
   const result = aString.normalize().toUpperCase().trim();
-  return result.length > MAX_LABEL_LENGTH ?
-    `${result.substring(0, MAX_LABEL_LENGTH)}...` :
-    result;
+  return result.length > MAX_LABEL_LENGTH ? `${result.substring(0, MAX_LABEL_LENGTH)}...` : result;
 }
 
 export function TimeButton({
@@ -24,40 +17,23 @@ export function TimeButton({
   time,
   style,
 }: {
-  onPress: Function | (() => any),
-  label: string,
-  time: Time24Hours,
-  style?: ViewStyle
+  onPress: Function | (() => any);
+  label: string;
+  time: Time24Hours;
+  style?: ViewStyle;
 }) {
-  
   const handleOnPress = () => {
     onPress();
-  }
+  };
 
   return (
-    <TouchableOpacity
-      onPress={handleOnPress}
-      style={[TimeButtonStyles.container, style]}
-    >
-      <Text style={TimeButtonStyles.label}>{trimLabel(label)}</Text>
-      <Text style={TimeButtonStyles.time}>{time.toString()}</Text>
-    </TouchableOpacity>
-  )
+    <Pressable onPress={handleOnPress} padding="2">
+      <Text fontSize="2xl" fontWeight="bold">
+        {trimLabel(label)}
+      </Text>
+      <Text fontSize="4xl" fontWeight="bold">
+        {time.toString()}
+      </Text>
+    </Pressable>
+  );
 }
-
-const TimeButtonStyles = StyleSheet.create({
-  container: {
-    margin: $V.smallGutter,
-    borderBottomColor: $C.lightPurple,
-    borderBottomWidth: 2,
-  },
-  label: {
-    fontSize: $V.fontSizeSmall,
-    color: $C.lightPurple
-  },
-  time: {
-    fontSize: $V.fontSizeLarge,
-    fontWeight: 'bold',
-    color: $C.darkPurple
-  }
-});
